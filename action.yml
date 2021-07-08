@@ -18,6 +18,5 @@ runs:
           git push -d origin $(git tag -l "${{ inputs.remove-tags-matching-pattern }}")
         fi
 
-        TAG=$(echo ${{ inputs.command-string-to-echo-as-tag-name }})
-        git tag $TAG
-        git push origin $TAG
+        git tag $(echo ${{ inputs.command-string-to-echo-as-tag-name }})
+        git push origin $(echo ${{ inputs.command-string-to-echo-as-tag-name }})
