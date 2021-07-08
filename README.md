@@ -5,6 +5,7 @@
 **.github/workflows/ci.yml**
 
 <!-- start example-usage -->
+
 ```yaml
 # ... more CI config ...
 
@@ -28,13 +29,14 @@ jobs:
         uses: nrwl/nx-tag-successful-ci-run@v1
 
       # ... more CI config ...
-
 ```
+
 <!-- end example-usage -->
 
 ## Advanced Configuration Option (not recommended for most users)
 
 <!-- start configuration-options -->
+
 ```yaml
 - uses: nrwl/nx-tag-successful-ci-run@v1
   with:
@@ -46,12 +48,21 @@ jobs:
     # Run ID and datetime. You can do something similar, or completely different. We prefix the tag name with `nx_`
     # to make it clear why this tag exists and where it orginated from to differentiate it from other tags you may
     # have in your repo.
-    # 
+    #
     # NOTE: Our default value is set up to work seamlessly with the complementary `nrwl/nx-set-shas` action, so if
     # you do customize this, it will be up to you to ensure that your tag is compatible with the pattern in use with
     # that action too.
     #
     # Default: nx_successful_ci_run__$(echo ${{ github.run_id }})__$(date +"%Y-%m-%d-%H%M")-UTC
-    command-string-to-echo-as-tag-name: ''
+    command-string-to-echo-as-tag-name: ""
+
+    # By default all tags will be preserved, set this to a pattern to match tags against which will be deleted before the new tag is applied.
+    #
+    # E.g. if you use the default value for ${{ inputs.command-string-to-echo-as-tag-name }}, you could set your pattern here to "nx_successful_ci_run__*"
+    # if you wanted to clean up all previous tags which this action created.
+    #
+    # Default: ''
+    remove-tags-matching-pattern: ""
 ```
+
 <!-- end configuration-options -->
