@@ -6,7 +6,7 @@ inputs:
     description: "A string which will be provided to bash's echo command in order to form the final tag name"
     default: 'nx_successful_ci_run__$(echo ${{ github.run_id }})__$(date +"%Y-%m-%d-%H%M")-UTC'
   remove-tags-matching-pattern:
-    description: "By default all tags will be preserved, set this to a pattern to match tags against which will be deleted before the new tag is applied. E.g. if you use the default ${{ inputs.command-string-to-echo-as-tag-name }}, you can set your pattern here to nx_successful_ci_run__*"
+    description: 'By default all tags will be preserved, set this to a pattern to match tags against which will be deleted before the new tag is applied. E.g. if you use the default value for "command-string-to-echo-as-tag-name", you can set your pattern here to "nx_successful_ci_run__*"'
 
 runs:
   using: "composite"
@@ -18,5 +18,6 @@ runs:
           git push -d origin $(git tag -l "${{ inputs.remove-tags-matching-pattern }}")
         fi
 
-        git tag $(echo ${{ inputs.command-string-to-echo-as-tag-name }})
-        git push origin $(echo ${{ inputs.command-string-to-echo-as-tag-name }})
+        TAG=$(echo ${{ inputs.command-string-to-echo-as-tag-name }})
+        git tag $TAG
+        git push origin $TAG
