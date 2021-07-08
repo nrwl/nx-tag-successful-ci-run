@@ -1,15 +1,23 @@
-name: 'Nx tag successful main build'
-description: 'Tags the repo, intended to be used only when on the main branch of your repo at the end of an Nx powered CI run'
+name: "Nx tag successful main build"
+description: "Tags the repo, intended to be used only when on the main branch of your repo at the end of an Nx powered CI run"
 
 inputs:
   command-string-to-echo-as-tag-name:
     description: "A string which will be provided to bash's echo command in order to form the final tag name"
     default: 'nx_successful_ci_run__$(echo ${{ github.run_id }})__$(date +"%Y-%m-%d-%H%M")-UTC'
+  remove-tags-matching-pattern:
+    description: "By default all tags will be preserved, set this to a pattern to match tags against which will be deleted before the new tag is applied. E.g. if you use the default ${{ inputs.command-string-to-echo-as-tag-name }}, you can set your pattern here to nx_successful_ci_run__*"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - shell: bash
       run: |
-        git tag $(echo ${{ inputs.command-string-to-echo-as-tag-name }})
-        git push origin --tags
+        # Built-in Github action conditionals are not supported in composite steps so have to check manually in bash
+        if [ "${{ inputs.remove-tags-matching-pattern }}" != "" ]; then
+          git push -d origin $(git tag -l "${{ inputs.remove-tags-matching-pattern }}")
+        fi
+
+        TAG=$(echo ${{ inputs.command-string-to-echo-as-tag-name }})
+        git tag $TAG
+        git push origin $TAG
